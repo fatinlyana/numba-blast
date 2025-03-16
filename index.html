@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numba Blast</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff; /* Light blue background */
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #ff69b4; /* Hot pink */
+        }
+        #number-display {
+            font-size: 40px;
+            color: #333;
+            background-color: #fff;
+            border: 3px solid #ff99cc;
+            padding: 10px;
+            margin: 20px auto;
+            width: 50%;
+            border-radius: 10px;
+        }
+        .card-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .digit-card {
+            width: 60px;
+            height: 80px;
+            background-color: #ffcc99; /* Default orange */
+            border: 2px solid #333;
+            border-radius: 10px;
+            font-size: 30px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .digit-card:hover {
+            opacity: 0.8;
+        }
+        #reset-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #66ccff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #reset-btn:hover {
+            background-color: #3399ff;
+        }
+        /* Custom Pop-up Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 3px solid #ff99cc;
+            border-radius: 15px;
+            width: 300px;
+            text-align: center;
+            background: linear-gradient(135deg, #ffccff, #ccffcc); /* Cute gradient */
+        }
+        .modal-content h2 {
+            color: #ff69b4;
+            font-size: 24px;
+            margin: 0 0 15px;
+        }
+        .modal-content input {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ff99cc;
+            border-radius: 5px;
+            width: 80%;
+            margin-bottom: 15px;
+        }
+        .modal-content button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #66ccff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .modal-content button:hover {
+            background-color: #3399ff;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="title">Numba Blast</h1>
+    <div id="number-display">0</div>
+    <div class="card-container" id="card-container"></div>
+    <button id="reset-btn">Reset</button>
+
+    <!-- Custom Pop-up Modal -->
+    <div id="nameModal" class="modal">
+        <div class="modal-content">
+            <h2>Hiii, little number wizard! ✨</h2>
+            <p>What’s your super-duper name?</p>
+            <input type="text" id="nameInput" placeholder="Type your name here!">
+            <button onclick="submitName()">Let’s Play!</button>
+        </div>
+    </div>
+
+    <script>
+        const colors = [
+            '#ff9999', '#ffcc99', '#ffff99', '#ccff99', 
+            '#99ff99', '#99ffcc', '#99ffff', '#99ccff', 
+            '#cc99ff', '#ff99ff'
+        ]; // Rainbow colors for cards
+        const cardContainer = document.getElementById('card-container');
+        const numberDisplay = document.getElementById('number-display');
+        const resetBtn = document.getElementById('reset-btn');
+        const title = document.getElementById('title');
+        const modal = document.getElementById('nameModal');
+        const nameInput = document.getElementById('nameInput');
+        let currentNumber = '';
+
+        // Show the custom pop-up when the page loads
+        window.onload = function() {
+            modal.style.display = 'block'; // Show the modal
+        };
+
+        // Submit the name and update the title
+        function submitName() {
+            let studentName = nameInput.value.trim();
+            if (studentName) {
+                title.textContent = `${studentName}’s Numba Blast`;
+            } else {
+                title.textContent = "Numba Blast"; // Default if no name
+            }
+            modal.style.display = 'none'; // Hide the modal
+        }
+
+        // Allow pressing Enter key to submit
+        nameInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                submitName();
+            }
+        });
+
+        // Create digit cards (0-9)
+        for (let i = 0; i <= 9; i++) {
+            const card = document.createElement('div');
+            card.className = 'digit-card';
+            card.textContent = i;
+            card.style.backgroundColor = colors[i]; // Unique color per digit
+            card.addEventListener('click', () => addDigit(i));
+            cardContainer.appendChild(card);
+        }
+
+        // Add digit to the number
+        function addDigit(digit) {
+            if (currentNumber.length < 7) { // Limit to 7 digits
+                currentNumber += digit;
+                numberDisplay.textContent = formatNumber(currentNumber);
+            }
+        }
+
+        // Format number with commas (e.g., 1,234,567)
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        // Reset the number
+        resetBtn.addEventListener('click', () => {
+            currentNumber = '';
+            numberDisplay.textContent = '0';
+        });
+    </script>
+</body>
+</html>
